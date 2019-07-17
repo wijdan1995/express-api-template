@@ -66,7 +66,7 @@ app.use(userRoutes)
 // passed any error messages from them
 app.use(errorHandler)
 
-// run API on designated port (4000 in this case)
+// run API on designated port (8000 in this case)
 app.listen(port, () => {
   console.log('listening on port ' + port)
 })
