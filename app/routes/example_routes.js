@@ -51,7 +51,13 @@ router.get('/examples/:id', requireToken, (req, res, next) => {
   Example.findById(req.params.id)
     .then(handle404)
     // if `findById` is succesful, respond with 200 and "example" JSON
-    .then(example => res.status(200).json({ example: example.toObject() }))
+    .then(example => {
+      // pass the `req` object and the Mongoose record to `requireOwnership`
+      // it will throw an error if the current user isn't the owner
+      requireOwnership(req, example)
+    
+      res.status(200).json({ example: example.toObject() })
+    })
     // if an error occurs, pass it to the handler
     .catch(next)
 })
@@ -91,7 +97,7 @@ router.patch('/examples/:id', requireToken, removeBlanks, (req, res, next) => {
       return example.update(req.body.example)
     })
     // if that succeeded, return 204 and no JSON
-    .then(() => res.sendStatus(204))
+    .then(() => res.status(204)
     // if an error occurs, pass it to the handler
     .catch(next)
 })
