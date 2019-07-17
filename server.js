@@ -21,6 +21,9 @@ const auth = require('./lib/auth')
 // required middleware to log requests
 const requestLogger = require('./lib/request_logger')
 
+// Define Ports
+const reactPort = 7165
+const expressPort = 3000
 
 // establish database connection
 mongoose.Promise = global.Promise
@@ -33,10 +36,10 @@ const app = express()
 
 // set CORS headers on response from this API using the `cors` NPM package
 // `CLIENT_ORIGIN` is an environment variable that will be set on Heroku
-app.use(cors({ origin: process.env.CLIENT_ORIGIN || 'http://localhost:3000' }))
+app.use(cors({ origin: process.env.CLIENT_ORIGIN || reactPort }))
 
 // define port for API to run on
-const port = process.env.PORT || 3000
+const port = process.env.PORT || expressPort
 
 // this middleware makes it so the client can use the Rails convention
 // of `Authorization: Token token=<token>` OR the Express convention of
