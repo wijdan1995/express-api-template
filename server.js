@@ -21,6 +21,9 @@ const auth = require('./lib/auth')
 // required middleware to log requests
 const requestLogger = require('./lib/request_logger')
 
+// require middleware for accepting token or bearer
+const tokenOrBearer = require('./lib/token_or_bearer')
+
 // Define Ports
 const reactPort = 7165
 const expressPort = 3000
@@ -42,17 +45,9 @@ app.use(cors({ origin: process.env.CLIENT_ORIGIN || `http://localhost:${reactPor
 const port = process.env.PORT || expressPort
 
 // this middleware makes it so the client can use the Rails convention
-// of `Authorization: Token token=<token>` OR the Express convention of
+// of `Authorization: Token <token>` OR the Express convention of
 // `Authorization: Bearer <token>`
-app.use((req, res, next) => {
-  if (req.headers.authorization) {
-    const auth = req.headers.authorization
-    // if we find the Rails pattern in the header, replace it with the Express
-    // one before `passport` gets a look at the headers
-    req.headers.authorization = auth.replace('Token token=', 'Bearer ')
-  }
-  next()
-})
+app.use(tokenOrBearer)
 
 // register passport authentication middleware
 app.use(auth)
