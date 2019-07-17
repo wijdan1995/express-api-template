@@ -30,18 +30,17 @@ const router = express.Router()
 // INDEX
 // GET /examples
 router.get('/examples', requireToken, (req, res, next) => {
-  User.findById(req.user.id)
-    .populate('examples')
-    .then(user => {
-      // `examples` will be an array of Mongoose documents
-      // we want to convert each one to a POJO, so we use `.map` to
-      // apply `.toObject` to each one
-      return user.examples.map(example => example.toObject())
-    })
-    // respond with status 200 and JSON of the examples
-    .then(examples => res.status(200).json({ examples: examples }))
-    // if an error occurs, pass it to the handler
+  
+  // Option 1 get user's examples
+  Example.find({owner: req.user.id})
+    .then(examples => res.status(200).json({examples: examples}))
     .catch(next)
+  
+  // // Option 2 get user's examples
+  // User.findById(req.user.id) // must import User model
+    // .populate('examples')
+    // .then(user => res.status(200).json({ examples: user.examples }))
+    // .catch(next)
 })
 
 // SHOW
