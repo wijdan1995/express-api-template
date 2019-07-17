@@ -18,6 +18,10 @@ const db = require('./config/db')
 // require configured passport authentication middleware
 const auth = require('./lib/auth')
 
+// required middleware to log requests
+const requestLogger = require('./lib/request_logger')
+
+
 // establish database connection
 mongoose.Promise = global.Promise
 mongoose.connect(db, {
@@ -32,7 +36,7 @@ const app = express()
 app.use(cors({ origin: process.env.CLIENT_ORIGIN || 'http://localhost:3000' }))
 
 // define port for API to run on
-const port = process.env.PORT || 8000
+const port = process.env.PORT || 4741
 
 // this middleware makes it so the client can use the Rails convention
 // of `Authorization: Token token=<token>` OR the Express convention of
@@ -56,6 +60,9 @@ app.use(auth)
 app.use(bodyParser.json())
 // this parses requests sent by `$.ajax`, which use a different content type
 app.use(bodyParser.urlencoded({ extended: true }))
+
+// add request logger to create server log
+app.use(requestLogger)
 
 // register route files
 app.use(exampleRoutes)
