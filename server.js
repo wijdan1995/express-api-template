@@ -36,7 +36,7 @@ const app = express()
 app.use(cors({ origin: process.env.CLIENT_ORIGIN || 'http://localhost:3000' }))
 
 // define port for API to run on
-const port = process.env.PORT || 4741
+const port = process.env.PORT || 3000
 
 // this middleware makes it so the client can use the Rails convention
 // of `Authorization: Token token=<token>` OR the Express convention of
@@ -73,7 +73,7 @@ app.use(userRoutes)
 // passed any error messages from them
 app.use(errorHandler)
 
-// run API on designated port (8000 in this case)
+// run API on designated port (3000 in this case)
 app.listen(port, () => {
   console.log('listening on port ' + port)
 })
