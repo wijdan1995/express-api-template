@@ -30,18 +30,18 @@ const router = express.Router()
 // INDEX
 // GET /examples
 router.get('/examples', requireToken, (req, res, next) => {
-  
+
   // Option 1 get user's examples
-  Example.find({owner: req.user.id})
-    .then(examples => res.status(200).json({examples: examples}))
+  Example.find({ owner: req.user.id })
+    .then(examples => res.status(200).json({ examples: examples }))
     .catch(next)
-  
+
   // // Option 2 get user's examples
   // // must import User model and User model must have virtual for examples
   // User.findById(req.user.id) 
-    // .populate('examples')
-    // .then(user => res.status(200).json({ examples: user.examples }))
-    // .catch(next)
+  // .populate('examples')
+  // .then(user => res.status(200).json({ examples: user.examples }))
+  // .catch(next)
 })
 
 // SHOW
@@ -55,7 +55,7 @@ router.get('/examples/:id', requireToken, (req, res, next) => {
       // pass the `req` object and the Mongoose record to `requireOwnership`
       // it will throw an error if the current user isn't the owner
       requireOwnership(req, example)
-    
+
       res.status(200).json({ example: example.toObject() })
     })
     // if an error occurs, pass it to the handler
@@ -97,7 +97,7 @@ router.patch('/examples/:id', requireToken, removeBlanks, (req, res, next) => {
       return example.update(req.body.example)
     })
     // if that succeeded, return 204 and no JSON
-    .then(() => res.status(204))
+    .then(() => res.sendStatus(204))
     // if an error occurs, pass it to the handler
     .catch(next)
 })
